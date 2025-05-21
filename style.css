@@ -1,6 +1,18 @@
+/*
+  Note on animations:
+  - The `popIn` animation is applied to all <li> items on load for an initial effect.
+    For dynamically added tasks, you'd typically add a class via JavaScript to trigger this animation.
+  - The `fadeOut` keyframes are defined for task deletion. To use it, you would add a
+    class to the <li> via JavaScript before removing it, and then remove the element
+    from the DOM after the animation completes (e.g., using the 'animationend' event).
+*/
+
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f4f7f6;
+    background-image: linear-gradient(rgba(244, 247, 246, 0.85), rgba(244, 247, 246, 0.95)), url('https://source.unsplash.com/random/1920x1080/?workspace,minimal,desk');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Keeps the background fixed during scroll */
     margin: 0;
     padding: 20px;
     display: flex;
@@ -14,7 +26,7 @@ body {
     background-color: #ffffff;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Slightly enhanced shadow */
     width: 100%;
     max-width: 500px;
     text-align: center;
@@ -24,6 +36,27 @@ h1 {
     color: #2c3e50;
     margin-bottom: 25px;
     font-weight: 600;
+    animation: fadeInDown 0.6s ease-out 0.2s backwards;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popIn {
+    0% { opacity: 0; transform: translateY(15px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: scale(0.8); max-height: 0; padding: 0; margin-bottom: 0; border:0; }
 }
 
 .input-area {
@@ -44,6 +77,7 @@ h1 {
 #taskInput:focus {
     outline: none;
     border-color: #5dade2;
+    box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.25); /* Subtle glow */
 }
 
 #addTaskBtn {
@@ -55,11 +89,16 @@ h1 {
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease-out;
 }
 
 #addTaskBtn:hover {
     background-color: #3498db;
+    transform: scale(1.05);
+}
+
+#addTaskBtn:active {
+    transform: scale(0.98); /* Click feedback */
 }
 
 #taskList {
@@ -76,14 +115,26 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.2s ease-out;
     word-break: break-word;
+    animation: popIn 0.4s ease-out forwards; /* Apply popIn to existing items on load */
+}
+
+/* Stagger animation for list items if you were adding them with JS and delays */
+/* #taskList li:nth-child(1) { animation-delay: 0.1s; }
+   #taskList li:nth-child(2) { animation-delay: 0.2s; } ... etc. */
+
+#taskList li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 #taskList li.completed {
     background-color: #d4efdf;
     text-decoration: line-through;
     color: #7f8c8d;
+    transition: background-color 0.4s ease, color 0.4s ease, text-decoration-color 0.4s ease;
+    text-decoration-color: #7f8c8d; /* Ensure smooth transition for strikethrough color */
 }
 
 #taskList li .task-text {
@@ -100,9 +151,14 @@ h1 {
     border-radius: 4px;
     cursor: pointer;
     margin-left: 10px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease-out;
 }
 
 #taskList li .delete-btn:hover {
     background-color: #c0392b;
+    transform: scale(1.1);
+}
+
+#taskList li .delete-btn:active {
+    transform: scale(0.95); /* Click feedback */
 }
