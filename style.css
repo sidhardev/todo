@@ -63,10 +63,12 @@ h1 {
     display: flex;
     margin-bottom: 25px;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 #taskInput {
-    flex-grow: 1;
+    flex: 2 1 200px;
+    min-width: 200px;
     padding: 12px 15px;
     border: 2px solid #ddd;
     border-radius: 6px;
@@ -78,6 +80,19 @@ h1 {
     outline: none;
     border-color: #5dade2;
     box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.25); /* Subtle glow */
+}
+
+#taskDueDate, #taskPriority {
+    flex: 0 1 auto;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+#taskTags {
+    flex: 1 1 150px;
 }
 
 #addTaskBtn {
@@ -101,6 +116,53 @@ h1 {
     transform: scale(0.98); /* Click feedback */
 }
 
+.filter-sort-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-sort-area select, .filter-sort-area input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 120px;
+}
+
+.stats-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.stats-area span {
+    font-size: 14px;
+    color: #666;
+}
+
+#clearCompletedBtn {
+    padding: 8px 16px;
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#clearCompletedBtn:hover {
+    background-color: #7f8c8d;
+}
+
 #taskList {
     list-style-type: none;
     padding: 0;
@@ -118,6 +180,8 @@ h1 {
     transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.2s ease-out;
     word-break: break-word;
     animation: popIn 0.4s ease-out forwards; /* Apply popIn to existing items on load */
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 /* Stagger animation for list items if you were adding them with JS and delays */
@@ -161,4 +225,36 @@ h1 {
 
 #taskList li .delete-btn:active {
     transform: scale(0.95); /* Click feedback */
+}
+
+.task-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+    color: #666;
+    align-items: center;
+}
+
+.task-tag {
+    background-color: #3498db;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.priority-high {
+    border-left: 4px solid #e74c3c;
+}
+
+.priority-medium {
+    border-left: 4px solid #f1c40f;
+}
+
+.priority-low {
+    border-left: 4px solid #2ecc71;
+}
+
+.due-date-warning {
+    color: #e74c3c;
 }
