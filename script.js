@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
             addedDate: new Date().toISOString()
         };
 
-        createTaskElement(task);
+        const li = createTaskElement(task);
+        li.dataset.addedDate = task.addedDate; // Store the added date
         
         // Reset inputs
         taskInput.value = '';
@@ -86,12 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
         taskMeta.appendChild(dueDateSpan);
 
         // Add tags
-        task.tags.forEach(tag => {
-            const tagSpan = document.createElement('span');
-            tagSpan.textContent = tag;
-            tagSpan.classList.add('task-tag');
-            taskMeta.appendChild(tagSpan);
-        });
+        // Safely handle tags
+        if (Array.isArray(task.tags)) {
+            task.tags.forEach(tag => {
+                if (tag) {  // Check if tag is not null/undefined/empty
+                    const tagSpan = document.createElement('span');
+                    tagSpan.textContent = tag;
+                    tagSpan.classList.add('task-tag');
+                    taskMeta.appendChild(tagSpan);
+                }
+            });
+        }
 
         if (task.completed) {
             li.classList.add('completed');
@@ -120,19 +126,21 @@ document.addEventListener('DOMContentLoaded', () => {
         li.appendChild(taskContent);
         li.appendChild(deleteBtn);
         taskList.appendChild(li);
+        return li; // Return the created element
     }
 
     function saveTasks() {
         const tasks = [];
         taskList.querySelectorAll('li').forEach(li => {
-            tasks.push({
+            const task = {
                 text: li.querySelector('.task-text').textContent,
                 completed: li.classList.contains('completed'),
                 dueDate: li.querySelector('.task-meta span').textContent.replace('Due: ', ''),
                 priority: Array.from(li.classList).find(cls => cls.startsWith('priority-')).replace('priority-', ''),
-                tags: Array.from(li.querySelectorAll('.task-tag')).map(tag => tag.textContent),
+                tags: Array.from(li.querySelectorAll('.task-tag')).map(tag => tag.textContent).filter(tag => tag),
                 addedDate: li.dataset.addedDate || new Date().toISOString()
-            });
+            };
+            tasks.push(task);
         });
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
